@@ -1,0 +1,50 @@
+---
+- name: Create a directory for mssql server 2022 files 
+  win_file:
+    path: C:\SQL2022setup\
+    state: directory
+
+- name: Copy config file from controller to sqlsetup directory
+  ansible.builtin.template:
+    src: ../templates/config.ini.j2
+    dest: C:\SQL2022setup\config.ini
+
+# - name: Ensure installation ISO is mounted
+#   community.windows.win_disk_image:
+#     image_path: "{{ MSSQL_ISO_PATH }}"
+#     state: present
+#   register: disk_image_out
+
+# - name: debug disk_image_out
+#   ansible.builtin.debug:
+#     var: disk_image_out
+#     verbosity: 2
+
+# - name: Copy all setup files from mounted ISO to sqlsetup directory
+#   win_copy:
+#     src: "{{ disk_image_out.mount_paths[0] }}" 
+#     dest: 'C:\SQL2022setup' 
+#     remote_src: True
+
+# - name: Unmount ISO
+#   community.windows.win_disk_image:
+#     image_path: "{{ MSSQL_ISO_PATH }}"
+#     state: absent
+
+# - name: Install SQL Server Developer 2022
+#   win_command: C:\SQL2022setup\setup.exe /ConfigurationFile=C:\SQL2022setup\config.ini  
+#   async: 1800
+#   poll: 0
+#   register: install_result
+
+# - name: Wait for SQL Server installation to complete
+#   async_status:
+#     jid: "{{ install_result.ansible_job_id }}"
+#   register: job_result
+#   until: job_result.finished
+#   retries: 180
+#   delay: 10
+
+# - name: Delete temporary setup folder
+#   win_shell: Remove-Item -Path "C:\SQL2022setup" -Recurse -Force
+...
